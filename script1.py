@@ -1,69 +1,47 @@
 def lexo_objektivat():
     ditet = ["Hene", "Marte", "Merkure", "Enjte", "Premte", "Shtune", "Diel"]
-    obj_hene = obj_marte = obj_merkure = obj_enjte = obj_premte = obj_shtune = obj_diel = 0
-
+    objektivat = []
     print("--- Vendos objektivat ditor (Hene–Diel) ---")
     for dita in ditet:
         while True:
             try:
-                objektivi = int(input(f"Objektivi per {dita} (hapa): "))
-                if objektivi < 0:
-                    print("✘ Objektivi duhet te jet numer pozitiv.")
-                else:
+                obj = int(input(f"Objektivi per {dita} (hapa): "))
+                if obj >= 0:
+                    objektivat.append(obj)
                     break
+                else:
+                    print("✘ Objektivi duhet te jet numer pozitiv.")
             except ValueError:
                 print("✘ Ju lutem jepni nje numer te vlefshem.")
-        if dita == "Hene": obj_hene = objektivi
-        elif dita == "Marte": obj_marte = objektivi
-        elif dita == "Merkure": obj_merkure = objektivi
-        elif dita == "Enjte": obj_enjte = objektivi
-        elif dita == "Premte": obj_premte = objektivi
-        elif dita == "Shtune": obj_shtune = objektivi
-        elif dita == "Diel": obj_diel = objektivi
+    return objektivat
 
-    return obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel
-
-def lexo_hapat_dhe_vlereso(obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel):
+def lexo_hapat_dhe_vlereso(objektivat):
     ditet = ["Hene", "Marte", "Merkure", "Enjte", "Premte", "Shtune", "Diel"]
-    objektivat = [obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel]
-    hap_hene = hap_marte = hap_merkure = hap_enjte = hap_premte = hap_shtune = hap_diel = 0
-    arritura = 0
-    total_hapa = 0
-    total_obj = sum(objektivat)
-
+    hapat = []
+    arritura = total_hapa = 0
     print("--- Shkruaj hapat e realizuar (Hene–Diel) ---")
-    for i in range(7):
-        dita = ditet[i]
-        objektivi = objektivat[i]
+    for i, dita in enumerate(ditet):
         while True:
             try:
                 hapa = int(input(f"Hapat ne {dita}: "))
-                if hapa < 0:
-                    print("✘ Hapat duhet të jenë numër pozitiv.")
-                else:
+                if hapa >= 0:
+                    hapat.append(hapa)
                     break
+                else:
+                    print("✘ Hapat duhet të jenë numër pozitiv.")
             except ValueError:
                 print("✘ Ju lutem jepni një numër të vlefshëm.")
-        if dita == "Hene": hap_hene = hapa
-        elif dita == "Marte": hap_marte = hapa
-        elif dita == "Merkure": hap_merkure = hapa
-        elif dita == "Enjte": hap_enjte = hapa
-        elif dita == "Premte": hap_premte = hapa
-        elif dita == "Shtune": hap_shtune = hapa
-        elif dita == "Diel": hap_diel = hapa
-
-        if hapa >= objektivi:
+        if hapa >= objektivat[i]:
             print("  ✔ Arritur")
             arritura += 1
         else:
-            print(f"  ✘ Jo e arritur (mungojne {objektivi - hapa} hapa)")
+            print(f"  ✘ Jo e arritur (mungojne {objektivat[i] - hapa} hapa)")
         total_hapa += hapa
+    return hapat, arritura, total_hapa
 
-    return hap_hene, hap_marte, hap_merkure, hap_enjte, hap_premte, hap_shtune, hap_diel, arritura, total_hapa, total_obj
-
-
-def shfaq_raportin(objektivat, hapat, arritura, total_hapa, total_obj):
+def shfaq_raportin(objektivat, hapat, arritura, total_hapa):
     ditet = ["Hene", "Marte", "Merkure", "Enjte", "Premte", "Shtune", "Diel"]
+    total_obj = sum(objektivat)
     print("\n--- RAPORTI JAVOR ---")
     print("Dita          Objektivi   Realizimi    Statusi")
     print("----------------------------------------------")
@@ -73,31 +51,17 @@ def shfaq_raportin(objektivat, hapat, arritura, total_hapa, total_obj):
     print("----------------------------------------------")
     print(f"Objective achieved: {arritura}/7 dite")
     print(f"Total steps taken / Total objective: {total_hapa} / {total_obj}")
-    perqindja = (total_hapa / total_obj) * 100 if total_obj > 0 else 0
-    print(f"Perqindja ndaj objektivit javor: {perqindja:.2f}%\n")
-
+    print(f"Perqindja ndaj objektivit javor: {(total_hapa / total_obj) * 100:.2f}%\n" if total_obj else "Perqindja: 0%\n")
 
 while True:
-    obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel = lexo_objektivat()
-    hap_hene, hap_marte, hap_merkure, hap_enjte, hap_premte, hap_shtune, hap_diel, arritura, total_hapa, total_obj = lexo_hapat_dhe_vlereso(
-        obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel)
-
+    objektivat = lexo_objektivat()
+    hapat, arritura, total_hapa = lexo_hapat_dhe_vlereso(objektivat)
     while True:
         print("====== MENU ======")
-        print("1) Shfaq raportin javor")
-        print("2) Ndrysho objektivat dhe rifillo Hapin 2")
-        print("3) Dil")
+        print("1) Shfaq raportin javor\n2) Ndrysho objektivat\n3) Dil")
         zgjedhja = input("Zgjidh (1-3): ")
-
         match zgjedhja:
-            case "1":
-                objektivat = [obj_hene, obj_marte, obj_merkure, obj_enjte, obj_premte, obj_shtune, obj_diel]
-                hapat = [hap_hene, hap_marte, hap_merkure, hap_enjte, hap_premte, hap_shtune, hap_diel]
-                shfaq_raportin(objektivat, hapat, arritura, total_hapa, total_obj)
-            case "2":
-                break 
-            case "3":
-                print("Programi u mbyll. 👋")
-                exit()
-            case _:
-                print("✘ Zgjedhje e pavlefshme. Provo përsëri.")
+            case "1": shfaq_raportin(objektivat, hapat, arritura, total_hapa)
+            case "2": break
+            case "3": print("Programi u mbyll. 👋"); exit()
+            case _: print("✘ Zgjedhje e pavlefshme. Provo përsëri.")
